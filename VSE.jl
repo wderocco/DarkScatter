@@ -4,6 +4,66 @@ const ec = 0.302811
 const αem = ec^2/(4pi)
 
 #################################################
+# VECTOR SELF-ENERGY IN DILUTE NON-RELATIVISTIC GAS
+
+# Plasma dispersion relation Z(xi) in a form valid for real arguments
+function Zi(x)
+	sqrt(pi)*exp(-x^2)
+end
+
+function Zr(x)
+	-2*dawson(x)
+end
+
+# Real part of longitudinal photon polarization tensor in dilute, non-relativistic gas.
+function ΠLr_dnr(q0,q,m,Z,n,T)
+	s = sqrt(T/m)
+	xi = q0/(sqrt(2)*q*s)
+	qp = (q0^2 - q^2) / (2*q0*m)
+	(
+	 ((ec^2 * Z^2 * n) / (sqrt(2)*q*s)) *
+	 (Zr(xi*(1 + qp)) - Zr(xi*(1 - qp)))
+	 )
+end
+
+# Real part of transverse photon polarization tensor in dilute, non-relativistic gas.
+function ΠTr_dnr(q0,q,m,Z,n,T)
+	wp2 = ec^2 * Z^2 * n / m
+	s = sqrt(T/m)
+	xi = q0/(sqrt(2)*q*s)
+	Q2 = q0^2 - q^2
+	qp = Q2 / (2*q0*m)
+	(
+	 wp2*(1 - (s^2 - Q2/(4*m^2))*(m/q0)*xi*
+		  (Zr(xi*(1 + qp)) - Zr(xi*(1 - qp))))
+	 )
+end
+
+# Imaginary part of longitudinal photon polarization tensor in dilute, non-relativistic gas
+function ΠLi_dnr(q0,q,m,Z,n,T)
+	s = sqrt(T/m)
+	xi = q0/(sqrt(2)*q*s)
+	qp = (q0^2 - q^2) / (2*q0*m)
+	(
+	 ((ec^2 * Z^2 * n) / (sqrt(2)*q*s)) *
+	 (Zi(xi*(1 + qp)) - Zi(xi*(1 - qp)))
+	 )
+end
+
+# Imaginary part of transverse photon polarization tensor in dilute, non-relativistic gas
+function ΠTi_dnr(q0,q,m,Z,n,T)
+	wp2 = ec^2 * Z^2 * n / m
+	s = sqrt(T/m)
+	xi = q0/(sqrt(2)*q*s)
+	Q2 = q0^2 - q^2
+	qp = Q2 / (2*q0*m)
+	(
+	 -wp2*((s^2 - Q2/(4*m^2))*(m/q0)*xi*
+		  (Zi(xi*(1 + qp)) - Zi(xi*(1 - qp))))
+	 )
+end
+
+#################################################
 # VECTOR SELF-ENERGY IN DEGENERATE FERMION GAS 
 
 # Imaginary part of longitudinal photon polarization tensor for degenerate electron gas.
